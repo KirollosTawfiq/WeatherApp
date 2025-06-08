@@ -1,0 +1,22 @@
+{
+  "expo": {
+    "name": "weather-app",
+    "slug": "weather-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "edgeToEdgeEnabled": true,
+      "package": "com.kirollostawfiq.weatherapp"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "cd75a072-8b95-4f46-be74-e1434d367312"
+      }
+    }
+  }
+}
