@@ -1,0 +1,180 @@
+import {
+  Image,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+  KeyboardAvoidingView,
+  Platform,
+  Switch,
+} from "react-native";
+import React, { useState } from "react";
+import Icon from "react-native-vector-icons/FontAwesome";
+import { LinearGradient } from "expo-linear-gradient";
+import { useNavigation } from "@react-navigation/native";
+import { SocialIcon } from "react-native-elements";
+import { Formik } from "formik";
+import * as Yup from "yup";
+
+// Schema using Yup
+const SignupSchema = Yup.object().shape({
+  name: Yup.string().required("Name is required"),
+  password: Yup.string()
+    .required("Password is required")
+    .min(5, "Minimum 5 characters"),
+  email: Yup.string()
+    .required("Email is required")
+    .email("Enter a valid email address"),
+  mobile: Yup.string()
+    .required("Mobile is required")
+    .matches(/^\d+$/, "Enter a valid number"),
+});
+
+const SignupScreen = () => {
+  const [showPassword, setShowPassword] = useState(false);
+  const navigation = useNavigation();
+
+  return (
+    <KeyboardAvoidingView
+      behavior="padding"
+      keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
+      style={styles.container}
+    >
+      <View style={styles.topImageContainer}>
+        <Image
+          source={require("../assets/topVector.png")}
+          style={styles.topImage}
+        />
+      </View>
+
+      <Text style={styles.createAccountText}>Create account</Text>
+
+      <Formik
+        initialValues={{ name: "", password: "", email: "", mobile: "" }}
+        validationSchema={SignupSchema}
+        onSubmit={(values, { resetForm }) => {
+          navigation.navigate("Weather");
+          resetForm();
+          setShowPassword(false);
+        }}
+      >
+        {({
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          values,
+          errors,
+          touched,
+        }) => (
+          <>
+            {/* Name */}
+            <View style={styles.inputContainer}>
+              <Icon name="user" size={24} color="#9A9A9A" style={styles.inputIcon} />
+              <TextInput
+                style={styles.textInput}
+                placeholder="Name"
+                onChangeText={handleChange("name")}
+                onBlur={handleBlur("name")}
+                value={values.name}
+              />
+            </View>
+            {touched.name && errors.name && (
+              <Text style={styles.errorText}>{errors.name}</Text>
+            )}
+
+            {/* Password */}
+            <View style={styles.inputContainer}>
+              <Icon name="lock" size={24} color="#9A9A9A" style={styles.inputIcon} />
+              <TextInput
+                style={styles.textInput}
+                placeholder="Password"
+                secureTextEntry={!showPassword}
+                onChangeText={handleChange("password")}
+                onBlur={handleBlur("password")}
+                value={values.password}
+              />
+            </View>
+            {touched.password && errors.password && (
+              <Text style={styles.errorText}>{errors.password}</Text>
+            )}
+
+            {/* Show Password Toggle */}
+            <View style={styles.showPasswordContainer}>
+              <Switch
+                value={showPassword}
+                onValueChange={setShowPassword}
+                thumbColor={showPassword ? "#623AA2" : "#f4f3f4"}
+                trackColor={{ false: "#767577", true: "#a384ff" }}
+                style={{ transform: [{ scale: 0.7 }] }}
+              />
+              <Text style={styles.showPasswordText}>Show Password</Text>
+            </View>
+
+            {/* Email */}
+            <View style={styles.inputContainer}>
+              <Icon name="envelope" size={20} color="#9A9A9A" style={styles.inputIcon} />
+              <TextInput
+                style={styles.textInput}
+                placeholder="Email"
+                onChangeText={handleChange("email")}
+                onBlur={handleBlur("email")}
+                value={values.email}
+                keyboardType="email-address"
+              />
+            </View>
+            {touched.email && errors.email && (
+              <Text style={styles.errorText}>{errors.email}</Text>
+            )}
+
+            {/* Mobile */}
+            <View style={styles.inputContainer}>
+              <Icon name="mobile" size={30} color="#9A9A9A" style={styles.inputIcon} />
+              <TextInput
+                style={styles.textInput}
+                placeholder="Mobile"
+                onChangeText={handleChange("mobile")}
+                onBlur={handleBlur("mobile")}
+                value={values.mobile}
+                keyboardType="numeric"
+              />
+            </View>
+            {touched.mobile && errors.mobile && (
+              <Text style={styles.errorText}>{errors.mobile}</Text>
+            )}
+
+            {/* Create Button */}
+            <View style={styles.createContainer}>
+              <Text style={styles.createText}>Create</Text>
+              <TouchableOpacity onPress={handleSubmit}>
+                <LinearGradient
+                  colors={["#F97794", "#623AA2"]}
+                  style={styles.linearGradient}
+                >
+                  <Icon name="arrow-right" size={24} color="#FFFFFF" />
+                </LinearGradient>
+              </TouchableOpacity>
+            </View>
+          </>
+        )}
+      </Formik>
+
+      <Text style={styles.footerText}>Or create account using social media</Text>
+
+      <View style={styles.socialMediaIconsContainer}>
+        <SocialIcon type="facebook" style={styles.socialMediaIcons} />
+        <SocialIcon type="twitter" style={styles.socialMediaIcons} />
+        <SocialIcon type="google" style={styles.socialMediaIcons} />
+      </View>
+
+      <View style={styles.leftVectorContainer}>
+        <Image
+          source={require("../assets/leftVector.png")}
+          style={styles.leftVectorImage}
+        />
+      </View>
+    </KeyboardAvoidingView>
+  );
+};
+
+export default SignupScreen;
